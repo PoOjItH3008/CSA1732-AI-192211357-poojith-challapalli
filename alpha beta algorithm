@@ -1,0 +1,145 @@
+import math
+
+class Game:
+    def get_initial_state(self):
+        raise NotImplementedError
+
+    def get_player(self, state):
+        raise NotImplementedError
+
+    def get_actions(self, state):
+        raise NotImplementedError
+
+    def get_result(self, state, action):
+        raise NotImplementedError
+
+    def is_terminal(self, state):
+        raise NotImplementedError
+
+    def get_utility(self, state, player):
+        raise NotImplementedError
+
+class AlphaBetaAgent:
+    def __init__(self, game):
+        self.game = game
+
+    def alpha_beta_search(self, state):
+        """
+        Implement the Alpha-Beta pruning algorithm to find the optimal move.
+
+        Parameters:
+        state: The current game state.
+
+        Returns:
+        The best action.
+        """
+        def max_value(state, alpha, beta):
+            if self.game.is_terminal(state):
+                return self.game.get_utility(state, 'O'), None
+            v = -math.inf
+            best_action = None
+            for action in self.game.get_actions(state):
+                value, _ = min_value(self.game.get_result(state, action), alpha, beta)
+                if value > v:
+                    v = value
+                    best_action = action
+                if v >= beta:
+                    return v, best_action
+                alpha = max(alpha, v)
+            return v, best_action
+
+        def min_value(state, alpha, beta):
+            if self.game.is_terminal(state):
+                return self.game.get_utility(state, 'X'), None
+            v = math.inf
+            best_action = None
+            for action in self.game.get_actions(state):
+                value, _ = max_value(self.game.get_result(state, action), alpha, beta)
+                if value < v:
+                    v = value
+                    best_action = action
+                if v <= alpha:
+                    return v, best_action
+                beta = min(beta, v)
+            return v, best_action
+
+        return max_value(state, -math.inf, math.inf)[1]
+
+# Example implementation for Tic Tac Toe using the generalized Alpha-Beta pruning framework
+class TicTacToe(Game):
+    def get_initial_state(self):
+        return [[' ' for _ in range(3)] for _ in range(3)]
+
+    def get_player(self, state):
+        x_count = sum(row.count('X') for row in state)
+        o_count = sum(row.count('O') for row in state)
+        return 'X' if x_count <= o_count else 'O'
+
+    def get_actions(self, state):
+        return [(i, j) for i in range(3) for j in range(3) if state[i][j] == ' ']
+
+    def get_result(self, state, action):
+        new_state = [row[:] for row in state]
+        new_state[action[0]][action[1]] = self.get_player(state)
+        return new_state
+
+    def is_terminal(self, state):
+        return self.get_winner(state) is not None or all(cell != ' ' for row in state for cell in row)
+
+    def get_utility(self, state, player):
+        winner = self.get_winner(state)
+        if winner == player:
+            return 1
+        elif winner is not None:
+            return -1
+        return 0
+
+    def get_winner(self, state):
+        for row in state:
+            if row[0] == row[1] == row[2] and row[0] != ' ':
+                return row[0]
+        for col in range(3):
+            if state[0][col] == state[1][col] == state[2][col] and state[0][col] != ' ':
+                return state[0][col]
+        if state[0][0] == state[1][1] == state[2][2] and state[0][0] != ' ':
+            return state[0][0]
+        if state[0][2] == state[1][1] == state[2][0] and state[0][2] != ' ':
+            return state[0][2]
+        return None
+
+def print_board(board):
+    for row in board:
+        print(" | ".join(row))
+        print("-" * 5)
+
+# Example usage
+if __name__ == "__main__":
+    game = TicTacToe()
+    agent = AlphaBetaAgent(game)
+    state = game.get_initial_state()
+
+    while not game.is_terminal(state):
+        print_board(state)
+        if game.get_player(state) == 'X':
+            while True:
+                try:
+                    move = int(input("Enter your move (1-9): ")) - 1
+                    action = (move // 3, move % 3)
+                    if action in game.get_actions(state):
+                        state = game.get_result(state, action)
+                        break
+                    else:
+                        print("This cell is already occupied! Choose another one.")
+                except (ValueError, IndexError):
+                    print("Invalid move! Please enter a number between 1 and 9.")
+        else:
+            print("Computer's move:")
+            action = agent.alpha_beta_search(state)
+            state = game.get_result(state, action)
+
+    print_board(state)
+    winner = game.get_winner(state)
+    if winner:
+        print(f"Player {winner} wins!")
+    else:
+        print("It's a tie!")
