@@ -1,0 +1,48 @@
+import heapq
+
+# Heuristic function (Manhattan distance)
+def heuristic(state, goal_state):
+    distance = 0
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] != 0:
+                goal_row, goal_col = divmod(goal_state.index(state[i][j]), 3)
+                distance += abs(i - goal_row) + abs(j - goal_col)
+    return distance
+
+# Function to get the possible moves
+def get_moves(state):
+    moves = []
+    row, col = next((i, j) for i in range(3) for j in range(3) if state[i][j] == 0)
+    for dr, dc in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+        if 0 <= row + dr < 3 and 0 <= col + dc < 3:
+            new_state = [row[:] for row in state]
+            new_state[row][col], new_state[row + dr][col + dc] = new_state[row + dr][col + dc], new_state[row][col]
+            moves.append(tuple(map(tuple, new_state)))  # Convert to tuple
+    return moves
+
+# A* algorithm
+def solve_8_puzzle(initial_state, goal_state):
+    heap = [(heuristic(initial_state, goal_state), 0, initial_state)]
+    visited = set()
+    
+    while heap:
+        _, moves, state = heapq.heappop(heap)
+        if state == goal_state:
+            return moves
+        if tuple(map(tuple, state)) in visited:  # Convert to tuple
+            continue
+        visited.add(tuple(map(tuple, state)))  # Convert to tuple
+        for new_state in get_moves(state):
+            heapq.heappush(heap, (heuristic(new_state, goal_state) + moves + 1, moves + 1, new_state))
+    
+    return -1  # No solution found
+
+# Example usage
+initial_state = [[7, 2, 4], [5, 0, 6], [8, 3, 1]]
+goal_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+moves = solve_8_puzzle(initial_state, goal_state)
+if moves != -1:
+    print(f"Minimum number of moves required: {moves}")
+else:
+    print("No solution found")
