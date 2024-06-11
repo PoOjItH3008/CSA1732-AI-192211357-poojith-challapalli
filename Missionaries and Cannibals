@@ -1,0 +1,71 @@
+from collections import deque
+
+def is_valid_state(state):
+    missionaries_left, cannibals_left, missionaries_right, cannibals_right, _ = state
+    if missionaries_left < 0 or cannibals_left < 0 or missionaries_right < 0 or cannibals_right < 0:
+        return False
+    if (missionaries_left > 0 and missionaries_left < cannibals_left):
+        return False
+    if (missionaries_right > 0 and missionaries_right < cannibals_right):
+        return False
+    return True
+
+def bfs(missionaries, cannibals):
+    initial_state = (missionaries, cannibals, 0, 0, True)
+    queue = deque([(initial_state, [])])
+    visited = set()
+    visited.add(initial_state)
+
+    while queue:
+        (m_left, c_left, m_right, c_right, boat), path = queue.popleft()
+
+        if m_left == 0 and c_left == 0:
+            return path + [(m_left, c_left, m_right, c_right, boat)]
+
+        moves = []
+        if boat:
+            # Boat on the left side
+            if m_left > 0:
+                moves.append((m_left - 1, c_left, m_right + 1, c_right, False))
+            if m_left > 1:
+                moves.append((m_left - 2, c_left, m_right + 2, c_right, False))
+            if c_left > 0:
+                moves.append((m_left, c_left - 1, m_right, c_right + 1, False))
+            if c_left > 1:
+                moves.append((m_left, c_left - 2, m_right, c_right + 2, False))
+            if m_left > 0 and c_left > 0:
+                moves.append((m_left - 1, c_left - 1, m_right + 1, c_right + 1, False))
+        else:
+            # Boat on the right side
+            if m_right > 0:
+                moves.append((m_left + 1, c_left, m_right - 1, c_right, True))
+            if m_right > 1:
+                moves.append((m_left + 2, c_left, m_right - 2, c_right, True))
+            if c_right > 0:
+                moves.append((m_left, c_left + 1, m_right, c_right - 1, True))
+            if c_right > 1:
+                moves.append((m_left, c_left + 2, m_right, c_right - 2, True))
+            if m_right > 0 and c_right > 0:
+                moves.append((m_left + 1, c_left + 1, m_right - 1, c_right - 1, True))
+
+        for move in moves:
+            if is_valid_state(move) and move not in visited:
+                visited.add(move)
+                queue.append((move, path + [(m_left, c_left, m_right, c_right, boat)]))
+
+    return None
+
+def print_solution(solution):
+    if solution:
+        for state in solution:
+            m_left, c_left, m_right, c_right, boat = state
+            boat_side = "left" if boat else "right"
+            print(f"Left: {m_left}M, {c_left}C | Right: {m_right}M, {c_right}C | Boat: {boat_side}")
+    else:
+        print("No solution found")
+
+# Example usage
+missionaries = 3
+cannibals = 3
+solution = bfs(missionaries, cannibals)
+print_solution(solution)
