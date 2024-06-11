@@ -1,0 +1,40 @@
+from itertools import permutations
+
+def get_value(word, char_to_digit):
+    return sum(char_to_digit[char] * 10**i for i, char in enumerate(reversed(word)))
+
+def solve_cryptarithmetic(equation):
+    # Split the equation into two parts
+    lhs, rhs = equation.split('=')
+    lhs_terms = lhs.split('+')
+
+    # Extract unique characters
+    unique_letters = set(''.join(lhs_terms) + rhs)
+
+    if len(unique_letters) > 10:
+        print("Too many unique letters for the digits 0-9")
+        return
+
+    # Try every permutation of digits for the letters
+    for perm in permutations(range(10), len(unique_letters)):
+        char_to_digit = dict(zip(unique_letters, perm))
+
+        # Ensure the leading digits are not zero
+        if any(char_to_digit[word[0]] == 0 for word in lhs_terms + [rhs]):
+            continue
+
+        # Calculate the values of the words
+        lhs_values = [get_value(term, char_to_digit) for term in lhs_terms]
+        rhs_value = get_value(rhs, char_to_digit)
+
+        # Check if the equation is satisfied
+        if sum(lhs_values) == rhs_value:
+            print(f"Solution: {' + '.join(map(str, lhs_values))} = {rhs_value}")
+            print(char_to_digit)
+            return
+
+    print("No solution found")
+
+# Example usage
+equation = input("Enter the cryptarithmetic equation (e.g., SEND+MORE=MONEY): ")
+solve_cryptarithmetic(equation)
