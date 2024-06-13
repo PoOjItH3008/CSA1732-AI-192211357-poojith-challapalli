@@ -1,0 +1,37 @@
+% Symptoms
+symptom(john, fever).
+symptom(john, cough).
+symptom(mary, headache).
+symptom(mary, nausea).
+symptom(peter, sore_throat).
+symptom(peter, fever).
+symptom(lisa, cough).
+symptom(lisa, fatigue).
+
+% Diseases and symptoms
+disease(cold, [fever, cough, sore_throat]).
+disease(flue, [fever, cough, fatigue]).
+disease(headache, [headache]).
+disease(migraine, [headache, nausea]).
+
+% Rules for diagnosis
+diagnose(Person, Disease) :-
+    symptom(Person, Symptom),
+    disease(Disease, Symptoms),
+    member(Symptom, Symptoms).
+
+% Example queries:
+
+% To diagnose John's disease:
+% ?- diagnose(john, Disease).
+% Output: Disease = cold ;
+%         Disease = flue.
+
+% To diagnose Lisa's disease:
+% ?- diagnose(lisa, Disease).
+% Output: Disease = flue.
+
+% To find all diseases with fever symptom:
+% ?- disease(Disease, Symptoms), member(fever, Symptoms).
+% Output: Disease = cold ;
+%         Disease = flue.
