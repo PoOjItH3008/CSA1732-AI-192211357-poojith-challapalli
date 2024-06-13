@@ -1,0 +1,55 @@
+% Facts
+% student(StudentName, SubjectCode)
+student(john, cs101).
+student(mary, cs102).
+student(susan, cs101).
+student(tom, cs103).
+student(lucy, cs102).
+
+% teacher(TeacherName, SubjectCode)
+teacher(mr_smith, cs101).
+teacher(ms_johnson, cs102).
+teacher(mr_brown, cs103).
+
+% subject(SubjectCode, SubjectName)
+subject(cs101, 'Introduction to Computer Science').
+subject(cs102, 'Data Structures').
+subject(cs103, 'Algorithms').
+
+% Rules
+% student_of_teacher(StudentName, TeacherName)
+student_of_teacher(StudentName, TeacherName) :-
+    student(StudentName, SubjectCode),
+    teacher(TeacherName, SubjectCode).
+
+% teacher_of_student(TeacherName, StudentName)
+teacher_of_student(TeacherName, StudentName) :-
+    student_of_teacher(StudentName, TeacherName).
+
+% subject_of_student(StudentName, SubjectName)
+subject_of_student(StudentName, SubjectName) :-
+    student(StudentName, SubjectCode),
+    subject(SubjectCode, SubjectName).
+
+% subject_of_teacher(TeacherName, SubjectName)
+subject_of_teacher(TeacherName, SubjectName) :-
+    teacher(TeacherName, SubjectCode),
+    subject(SubjectCode, SubjectName).
+
+% Queries
+% 1. Find the teacher of a given student
+% ?- student_of_teacher(john, Teacher).
+% Teacher = mr_smith.
+
+% 2. Find the students of a given teacher
+% ?- teacher_of_student(ms_johnson, Student).
+% Student = mary;
+% Student = lucy.
+
+% 3. Find the subject of a given student
+% ?- subject_of_student(tom, Subject).
+% Subject = 'Algorithms'.
+
+% 4. Find the subject taught by a given teacher
+% ?- subject_of_teacher(mr_brown, Subject).
+% Subject = 'Algorithms'.
