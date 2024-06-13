@@ -1,0 +1,82 @@
+% Planets database
+
+% Facts about planets
+planet(mercury).
+planet(venus).
+planet(earth).
+planet(mars).
+planet(jupiter).
+planet(saturn).
+planet(uranus).
+planet(neptune).
+
+% Order from the sun
+order(mercury, 1).
+order(venus, 2).
+order(earth, 3).
+order(mars, 4).
+order(jupiter, 5).
+order(saturn, 6).
+order(uranus, 7).
+order(neptune, 8).
+
+% Diameters in kilometers
+diameter(mercury, 4879).
+diameter(venus, 12104).
+diameter(earth, 12742).
+diameter(mars, 6779).
+diameter(jupiter, 139820).
+diameter(saturn, 116460).
+diameter(uranus, 50724).
+diameter(neptune, 49244).
+
+% Planets with rings
+has_rings(jupiter).
+has_rings(saturn).
+has_rings(uranus).
+has_rings(neptune).
+
+% Queries
+
+% Get all planets
+all_planets :-
+    findall(P, planet(P), Planets),
+    write(Planets), nl.
+
+% Get the order of a specific planet from the sun
+planet_order(Planet, Order) :-
+    order(Planet, Order).
+
+% Get the diameter of a specific planet
+planet_diameter(Planet, Diameter) :-
+    diameter(Planet, Diameter).
+
+% Check if a planet has rings
+planet_has_rings(Planet) :-
+    has_rings(Planet).
+
+% Get all planets with rings
+planets_with_rings :-
+    findall(P, has_rings(P), RingedPlanets),
+    write(RingedPlanets), nl.
+
+% Example queries
+% To find the order of Earth:
+% ?- planet_order(earth, Order).
+% Order = 3.
+
+% To find the diameter of Jupiter:
+% ?- planet_diameter(jupiter, Diameter).
+% Diameter = 139820.
+
+% To check if Neptune has rings:
+% ?- planet_has_rings(neptune).
+% true.
+
+% To get a list of all planets:
+% ?- all_planets.
+% [mercury,venus,earth,mars,jupiter,saturn,uranus,neptune].
+
+% To get a list of all planets with rings:
+% ?- planets_with_rings.
+% [jupiter,saturn,uranus,neptune].
