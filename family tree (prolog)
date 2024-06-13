@@ -1,0 +1,90 @@
+% Facts about family members
+
+% Parent relationships
+parent(john, mary).
+parent(john, michael).
+parent(susan, mary).
+parent(susan, michael).
+parent(mary, sophia).
+parent(mary, james).
+parent(robert, sophia).
+parent(robert, james).
+parent(michael, kevin).
+parent(michael, lisa).
+parent(linda, kevin).
+parent(linda, lisa).
+
+% Gender facts
+male(john).
+male(michael).
+male(robert).
+male(james).
+male(kevin).
+
+female(susan).
+female(mary).
+female(sophia).
+female(lisa).
+female(linda).
+
+% Rules to derive other relationships
+
+% Sibling relationship
+sibling(X, Y) :-
+    parent(P, X),
+    parent(P, Y),
+    X \= Y.
+
+% Brother relationship
+brother(X, Y) :-
+    sibling(X, Y),
+    male(X).
+
+% Sister relationship
+sister(X, Y) :-
+    sibling(X, Y),
+    female(X).
+
+% Grandparent relationship
+grandparent(X, Y) :-
+    parent(X, Z),
+    parent(Z, Y).
+
+% Grandfather relationship
+grandfather(X, Y) :-
+    grandparent(X, Y),
+    male(X).
+
+% Grandmother relationship
+grandmother(X, Y) :-
+    grandparent(X, Y),
+    female(X).
+
+% Uncle relationship
+uncle(X, Y) :-
+    brother(X, Z),
+    parent(Z, Y).
+
+% Aunt relationship
+aunt(X, Y) :-
+    sister(X, Z),
+    parent(Z, Y).
+
+% Queries
+
+% Example queries:
+% To find siblings:
+% ?- sibling(mary, michael).
+% Output: true.
+
+% To find brothers of Sophia:
+% ?- brother(X, sophia).
+% Output: X = james.
+
+% To find grandmothers of Kevin:
+% ?- grandmother(X, kevin).
+% Output: X = susan.
+
+% To find uncles of Lisa:
+% ?- uncle(X, lisa).
+% Output: X = michael.
