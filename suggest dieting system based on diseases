@@ -1,0 +1,39 @@
+% Facts about diseases and their dietary recommendations
+
+% Diabetes diet
+diet(diabetes, 'Include high-fiber foods such as vegetables, fruits, and whole grains. Avoid sugary foods and beverages. Eat lean proteins and healthy fats.').
+
+% Hypertension diet
+diet(hypertension, 'Include foods rich in potassium, magnesium, and fiber. Reduce sodium intake. Eat fruits, vegetables, whole grains, lean proteins, and low-fat dairy.').
+
+% Heart disease diet
+diet(heart_disease, 'Eat plenty of fruits, vegetables, whole grains, and lean proteins. Avoid saturated fats, trans fats, and high cholesterol foods. Include omega-3 fatty acids.').
+
+% Obesity diet
+diet(obesity, 'Focus on a balanced diet with controlled portion sizes. Include fruits, vegetables, lean proteins, and whole grains. Avoid high-calorie and high-sugar foods.').
+
+% Anemia diet
+diet(anemia, 'Include iron-rich foods such as lean meats, beans, and leafy green vegetables. Vitamin C-rich foods can help with iron absorption.').
+
+% Osteoporosis diet
+diet(osteoporosis, 'Include calcium-rich foods such as dairy products, leafy greens, and fortified foods. Ensure adequate vitamin D intake.').
+
+% General diet for health maintenance
+diet(healthy, 'Eat a balanced diet with a variety of foods from all food groups. Stay hydrated and maintain a healthy eating pattern.').
+
+% Rules to suggest diet based on disease
+suggest_diet(Disease) :-
+    diet(Disease, Recommendation),
+    write('Diet recommendation for '), write(Disease), write(':'), nl,
+    write(Recommendation), nl.
+
+% Example queries:
+% To get the diet recommendation for diabetes:
+% ?- suggest_diet(diabetes).
+% Output: Diet recommendation for diabetes:
+% Include high-fiber foods such as vegetables, fruits, and whole grains. Avoid sugary foods and beverages. Eat lean proteins and healthy fats.
+
+% To get the diet recommendation for heart disease:
+% ?- suggest_diet(heart_disease).
+% Output: Diet recommendation for heart disease:
+% Eat plenty of fruits, vegetables, whole grains, and lean proteins. Avoid saturated fats, trans fats, and high cholesterol foods. Include omega-3 fatty acids.
