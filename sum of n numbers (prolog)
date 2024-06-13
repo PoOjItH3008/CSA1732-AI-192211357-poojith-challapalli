@@ -1,0 +1,8 @@
+% Base case: Sum of first 0 numbers is 0
+sum_up_to(0, 0).
+
+sum_up_to(N, SumN) :-
+    N > 0,             
+    PrevN is N - 1,     
+    sum_up_to(PrevN, PrevSum),   
+    SumN is N + PrevSum.      
