@@ -1,0 +1,43 @@
+% Facts about birds and their ability to fly
+bird(eagle).
+bird(penguin).
+bird(ostrich).
+bird(sparrow).
+bird(kiwi).
+
+% Rules to determine if a bird can fly
+can_fly(eagle).
+can_fly(sparrow).
+
+cannot_fly(penguin).
+cannot_fly(ostrich).
+cannot_fly(kiwi).
+
+% General rule to check if a bird can fly
+is_flying_bird(Bird) :-
+    bird(Bird),
+    can_fly(Bird),
+    write(Bird), write(' can fly.'), nl.
+
+is_flying_bird(Bird) :-
+    bird(Bird),
+    cannot_fly(Bird),
+    write(Bird), write(' cannot fly.'), nl.
+
+% Example queries:
+% To check if an eagle can fly:
+% ?- is_flying_bird(eagle).
+% Output: eagle can fly.
+
+% To check if a penguin can fly:
+% ?- is_flying_bird(penguin).
+% Output: penguin cannot fly.
+
+% To check all birds and their flying ability:
+% ?- bird(Bird), is_flying_bird(Bird).
+% Output:
+% eagle can fly.
+% penguin cannot fly.
+% ostrich cannot fly.
+% sparrow can fly.
+% kiwi cannot fly.
