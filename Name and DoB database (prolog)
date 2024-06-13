@@ -1,0 +1,42 @@
+% Facts
+% person(Name, DateOfBirth)
+person('John Doe', date(1985, 5, 23)).
+person('Mary Smith', date(1990, 12, 15)).
+person('Alice Johnson', date(1975, 7, 30)).
+person('Bob Brown', date(2000, 11, 5)).
+person('Carol White', date(1988, 3, 8)).
+
+% Rules
+% Find the date of birth of a person
+date_of_birth(Name, DOB) :-
+    person(Name, DOB).
+
+% Find all people born in a specific year
+born_in_year(Year, Name) :-
+    person(Name, date(Year, _, _)).
+
+% Find all people born in a specific month and year
+born_in_month_year(Year, Month, Name) :-
+    person(Name, date(Year, Month, _)).
+
+% Find all people born before a specific year
+born_before_year(Year, Name) :-
+    person(Name, date(BirthYear, _, _)),
+    BirthYear < Year.
+
+% Example Queries
+% 1. Find the date of birth of John Doe
+% ?- date_of_birth('John Doe', DOB).
+% DOB = date(1985, 5, 23).
+
+% 2. Find all people born in 1990
+% ?- born_in_year(1990, Name).
+% Name = 'Mary Smith'.
+
+% 3. Find all people born in December 1990
+% ?- born_in_month_year(1990, 12, Name).
+% Name = 'Mary Smith'.
+
+% 4. Find all people born before 1980
+% ?- born_before_year(1980, Name).
+% Name = 'Alice Johnson'.
