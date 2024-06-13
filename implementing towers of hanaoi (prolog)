@@ -1,0 +1,16 @@
+% Towers of Hanoi implementation
+
+% hanoi(N, Source, Auxiliary, Target) - Solve the Towers of Hanoi puzzle with N disks
+hanoi(0, _, _, _) :- !.
+hanoi(N, Source, Auxiliary, Target) :-
+    N1 is N - 1,
+    hanoi(N1, Source, Target, Auxiliary),
+    move(Source, Target),
+    hanoi(N1, Auxiliary, Source, Target).
+
+% move(Source, Target) - Output the move from Source peg to Target peg
+move(Source, Target) :-
+    write('Move disk from '), write(Source), write(' to '), write(Target), nl.
+
+% Example query to solve the puzzle with 3 disks:
+% ?- hanoi(3, left, center, right).
